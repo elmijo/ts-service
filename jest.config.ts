@@ -17,6 +17,7 @@ export default {
       statements: 100,
     },
   },
+  setupFiles: ["<rootDir>/jest.setup.ts"],
   collectCoverageFrom: ["./src/**/*.ts"],
   moduleFileExtensions: ["js", "json", "ts"],
   transform: {
