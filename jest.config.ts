@@ -28,6 +28,7 @@ export default {
     "ts-jest": {
       disableSourceMapSupport: true,
       tsconfig: "<rootDir>/tsconfig.json",
+      isolatedModules: true,
     },
   },
 } as Config.InitialOptions
