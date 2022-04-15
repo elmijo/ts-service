@@ -9,8 +9,8 @@ import controller from "../../../src/controllers/health"
 
 const next = jest.fn() as NextFunction
 
-it("Should return a success response", () => {
-  expect(controller(req, res, next))
-  expect(res.json).toBeCalledWith({ message: "OK" })
-  expect(next).toBeCalledWith()
+it("should return a success response", () => {
+  expect(controller(req, res, next)).toBeUndefined()
+  expect(res.json).toHaveBeenCalledWith({ message: "OK" })
+  expect(next).toHaveBeenCalledWith()
 })

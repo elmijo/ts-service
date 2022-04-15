@@ -7,8 +7,8 @@ export default {
   testMatch: ["**/__tests__/**/*.(spec|test).[jt]s?(x)"],
   testPathIgnorePatterns: ["/node_modules/"],
   coverageDirectory: ".coverage",
-  coveragePathIgnorePatterns: ["/node_modules/", "/types/"],
-  coverageReporters: ["json", "text", "lcov"],
+  coveragePathIgnorePatterns: ["/node_modules/", "/types/", "/src/.*/index.ts"],
+  coverageReporters: ["json", "lcov", ["text", { skipEmpty: true }]],
   coverageThreshold: {
     global: {
       branches: 100,

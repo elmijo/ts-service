@@ -3,10 +3,10 @@ import "../../../src/tools/config-env"
 
 jest.mock("dotenv")
 
-describe("Testing server module", () => {
+describe("testing server module", () => {
   beforeEach(() => jest.resetModules())
   afterEach(() => jest.clearAllMocks())
-  it("Validate if module is instantiable", () => {
-    expect(dotenv.config).toHaveBeenCalled()
+  it("validate if module is instantiable", () => {
+    expect(dotenv.config).toHaveBeenCalledWith()
   })
 })

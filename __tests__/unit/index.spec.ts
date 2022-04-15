@@ -1,22 +1,56 @@
-import * as dotenv from "dotenv"
-import app from "../../src/app"
-import logger from "../../src/tools/logger"
-import "../../src"
+import { Application } from "express"
+import createApp from "../../src/app"
+import createServer, { Server } from "../../src/server"
+import { initErrorHandler } from "../../src/tools"
 
-jest.mock("dotenv")
-jest.mock("../../src/app")
-jest.mock("../../src/middleware")
-jest.mock("../../src/tools/logger")
+jest.mock("../../src/app", jest.fn)
+jest.mock("../../src/server", jest.fn)
+jest.mock("../../src/tools", () => ({
+  initErrorHandler: jest.fn(),
+}))
+jest.mock("../../src/tools/config-env", jest.fn)
 
-it("Should start successfully", () => {
-  //@ts-ignore
-  const server = app.listen.mock.results[0].value
-  const sucessFunction = server.on.mock.calls[0][1]
-  expect(dotenv.config).toBeCalledWith()
-  expect(app.listen).toBeCalledWith("3000")
-  expect(server.on).toBeCalledWith("listening", expect.any(Function))
-  sucessFunction()
-  expect(logger.info).toBeCalledWith(
-    "The application is running on http://localhost:3000"
-  )
+const initErrorHandlerMock = initErrorHandler as jest.MockedFunctionDeep<
+  typeof initErrorHandler
+>
+const createAppMock = createApp as jest.MockedFunctionDeep<typeof createApp>
+const createServerMock = createServer as jest.MockedFunction<
+  typeof createServer
+>
+const appMock = jest.fn() as unknown as Application
+const serverMock = {
+  start: jest.fn(),
+  stop: jest.fn(),
+} as Server
+
+const serverStartMock = serverMock.start as jest.MockedFunction<
+  typeof serverMock.start
+>
+
+afterEach(() => jest.clearAllMocks())
+
+it("should start successfully", () => {
+  createAppMock.mockReturnValueOnce(appMock)
+  createServerMock.mockReturnValueOnce(serverMock)
+  require("../../src")
+  expect(createServerMock).toHaveBeenCalledWith(appMock)
+  expect(serverMock.start).toHaveBeenCalledWith()
+  expect(serverMock.stop).not.toHaveBeenCalled()
+  expect(initErrorHandlerMock).not.toHaveBeenCalled()
+})
+
+it("should fail start", () => {
+  const initError = new Error("Init error.")
+  createAppMock.mockReturnValueOnce(appMock)
+  createServerMock.mockReturnValueOnce(serverMock)
+  serverStartMock.mockImplementationOnce(() => {
+    throw initError
+  })
+  jest.isolateModules(() => {
+    require("../../src")
+  })
+  expect(createServerMock).toHaveBeenCalledWith(appMock)
+  expect(serverMock.start).toHaveBeenCalledWith()
+  expect(serverMock.stop).not.toHaveBeenCalled()
+  expect(initErrorHandlerMock).toHaveBeenCalledWith(initError, serverMock)
 })

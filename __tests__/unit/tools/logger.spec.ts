@@ -1,14 +1,37 @@
 import pino from "pino"
-import "../../../src/tools/logger"
-import { name } from "../../../package.json"
+import config from "../../../src/config/logger"
+// import * as config from "../../../src/config"
+
+// import "../../../src/tools/logger"
+// import { name } from "../../../package.json"
 
 jest.mock("pino")
+jest.mock("../../../src/config/logger")
 
-it("Should create a logger", () => {
-  expect(pino).toBeCalledWith({
-    name,
+const configMock = config as jest.MockedObject<typeof config>
+
+afterEach(() => jest.clearAllMocks())
+
+it("should create a logger with default configuration", () => {
+  require("../../../src/tools/logger")
+  expect(pino).toHaveBeenCalledWith({
+    name: "@elmijo/ts-service",
     level: "info",
     prettyPrint: false,
-    redact: ["req.headers.Authorization", "req.headers.Authentication"],
+    redact: [],
+  })
+})
+
+it("should create a logger with custom configuration", () => {
+  configMock.level = "debug"
+  configMock.prettyPrint = { translateTime: true }
+  jest.isolateModules(() => {
+    require("../../../src/tools/logger")
+  })
+  expect(pino).toHaveBeenCalledWith({
+    name: "@elmijo/ts-service",
+    level: "debug",
+    prettyPrint: { translateTime: true },
+    redact: [],
   })
 })

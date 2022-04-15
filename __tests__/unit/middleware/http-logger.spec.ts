@@ -24,30 +24,30 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-it("Should init http logger", () => {
+it("should init http logger", () => {
   v4Mock.mockReturnValueOnce("123")
   httpLogger(req, res, next)
   const pninoHttpMidleware = pinoHttpMiddle.mock.results[0].value
   const genReqId = pinoHttpMock.mock.calls[0][0]["genReqId"]
 
-  expect(v4).toBeCalledWith()
-  expect(pinoHttp).toBeCalledWith({ logger, genReqId })
-  expect(pninoHttpMidleware).toBeCalledWith(req, res)
-  expect(res.setHeader).toBeCalledWith("X-Trace-Id", "123")
-  expect(next).toBeCalledWith()
+  expect(v4).toHaveBeenCalledWith()
+  expect(pinoHttp).toHaveBeenCalledWith({ logger, genReqId })
+  expect(pninoHttpMidleware).toHaveBeenCalledWith(req, res)
+  expect(res.setHeader).toHaveBeenCalledWith("X-Trace-Id", "123")
+  expect(next).toHaveBeenCalledWith()
   expect(genReqId()).toBe("123")
 })
 
-it("Should init http logger with request trace id", () => {
+it("should init http logger with request trace id", () => {
   req.headers["X-Trace-Id"] = "123456"
   httpLogger(req, res, next)
   const pninoHttpMidleware = pinoHttpMiddle.mock.results[0].value
   const genReqId = pinoHttpMock.mock.calls[0][0]["genReqId"]
 
-  expect(v4).not.toBeCalled()
-  expect(pinoHttp).toBeCalledWith({ logger, genReqId })
-  expect(pninoHttpMidleware).toBeCalledWith(req, res)
-  expect(res.setHeader).toBeCalledWith("X-Trace-Id", "123456")
-  expect(next).toBeCalledWith()
+  expect(v4).not.toHaveBeenCalled()
+  expect(pinoHttp).toHaveBeenCalledWith({ logger, genReqId })
+  expect(pninoHttpMidleware).toHaveBeenCalledWith(req, res)
+  expect(res.setHeader).toHaveBeenCalledWith("X-Trace-Id", "123456")
+  expect(next).toHaveBeenCalledWith()
   expect(genReqId()).toBe("123456")
 })
