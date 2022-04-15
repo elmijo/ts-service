@@ -1,17 +1,34 @@
-import express from "express"
 import routers from "../../src/routers"
-import "../../src/app"
+import { app as config } from "../../src/config"
+import createApp from "../../src/app"
 
 jest.mock("express")
-jest.mock("../../src/routers")
+jest.mock("../../src/routers", jest.fn)
 jest.mock("../../src/middleware", () => ["middleware-one", "middleware-two"])
+jest.mock("../../src/config", () => ({
+  app: {
+    withMiddleware: true,
+    errorHandler: jest.fn(),
+  },
+}))
 
-const expressMock = express as jest.MockedFunction<typeof express>
+afterEach(() => jest.clearAllMocks())
 
-it("Should create an express application", () => {
-  const app = expressMock.mock.results[0].value
-  expect(app.disable).toBeCalledWith("x-powered-by")
-  expect(app.use).toBeCalledWith("middleware-one")
-  expect(app.use).toBeCalledWith("middleware-two")
-  expect(app.use).toBeCalledWith(routers)
+it("should create an express application with middleware", () => {
+  const app = createApp()
+  expect(app.disable).toHaveBeenCalledWith("x-powered-by")
+  expect(app.use).toHaveBeenCalledTimes(4)
+  expect(app.use).toHaveBeenCalledWith("middleware-one")
+  expect(app.use).toHaveBeenCalledWith("middleware-two")
+  expect(app.use).toHaveBeenCalledWith(routers)
+  expect(app.use).toHaveBeenCalledWith(config.errorHandler)
+})
+
+it("should create an express application without middleware", () => {
+  config.withMiddleware = false
+  const app = createApp()
+  expect(app.disable).toHaveBeenCalledWith("x-powered-by")
+  expect(app.use).toHaveBeenCalledTimes(2)
+  expect(app.use).toHaveBeenCalledWith(routers)
+  expect(app.use).toHaveBeenCalledWith(config.errorHandler)
 })

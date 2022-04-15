@@ -1,11 +1,16 @@
 import "./tools/config-env"
-import app from "./app"
-import { logger } from "./tools"
+import createApp from "./app"
+import createServer from "./server"
+import { initErrorHandler } from "./tools"
 
-const { SERVER_PORT = "3000" } = process.env
+const server = createServer(createApp())
 
-const server = app.listen(SERVER_PORT)
+const init = async (): Promise<void> => {
+  try {
+    server.start()
+  } catch (err) {
+    initErrorHandler(err as Error, server)
+  }
+}
 
-server.on("listening", () => {
-  logger.info(`The application is running on http://localhost:${SERVER_PORT}`)
-})
+export default init()

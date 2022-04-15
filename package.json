@@ -11,7 +11,7 @@
     "start": "node ./build/index.js",
     "start:dev": "nodemon src/index.ts",
     "test": "jest --testPathPattern __tests__/unit",
-    "test:integration": "jest --testPathPattern __tests__/integration",
+    "test:integration": "LOG_LEVEL=silent jest --testPathPattern __tests__/integration",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
     "docs": "rimraf ./.docs && typedoc",
@@ -40,6 +40,7 @@
     "@typescript-eslint/parser": "^5.15.0",
     "branchlint": "^0.0.2",
     "eslint": "^8.11.0",
+    "eslint-plugin-jest": "^26.1.4",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-tsdoc": "^0.2.14",
     "husky": "^7.0.4",
@@ -74,6 +75,7 @@
     },
     "extends": [
       "eslint:recommended",
+      "plugin:jest/all",
       "plugin:@typescript-eslint/recommended"
     ],
     "globals": {
@@ -87,6 +89,7 @@
     "plugins": [
       "@typescript-eslint",
       "eslint-plugin-tsdoc",
+      "jest",
       "prettier"
     ],
     "ignorePatterns": [
@@ -108,7 +111,33 @@
         {
           "allowSingleExtends": true
         }
-      ]
+      ],
+      "jest/consistent-test-it": [
+        "error",
+        {
+          "fn": "it"
+        }
+      ],
+      "jest/max-nested-describe": [
+        "error",
+        {
+          "max": 3
+        }
+      ],
+      "jest/expect-expect": [
+        "error",
+        {
+          "assertFunctionNames": [
+            "expect",
+            "request.**.expect"
+          ]
+        }
+      ],
+      "jest/require-hook": "off",
+      "jest/prefer-expect-assertions": "off",
+      "jest/require-top-level-describe": "off",
+      "jest/no-hooks": "off",
+      "jest/prefer-spy-on": "off"
     }
   },
   "lint-staged": {

@@ -7,7 +7,7 @@ jest.mock("../../src/controllers/health")
 
 const routerMock = Router as jest.MockedFunction<typeof Router>
 
-it("Sould register all routers", () => {
+it("sould register all routers", () => {
   const router = routerMock.mock.results[0].value
-  expect(router.use).toBeCalledWith(["/", "/health"], health)
+  expect(router.use).toHaveBeenCalledWith(["/", "/health"], health)
 })

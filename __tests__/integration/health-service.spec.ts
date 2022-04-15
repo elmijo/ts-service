@@ -1,14 +1,16 @@
 import request from "supertest"
-import app from "../../src/app"
+import createApp from "../../src/app"
 
-describe("Get health check status", () => {
-  describe("When call /", () => {
-    it("Should resposne 200", () =>
+const app = createApp()
+
+describe("get health check status", () => {
+  describe("when call /", () => {
+    it("should resposne 200", () =>
       request(app).get("/").expect(200, { message: "OK" }))
   })
 
-  describe("When call /health", () => {
-    it("Should resposne 200", () =>
+  describe("when call /health", () => {
+    it("should resposne 200", () =>
       request(app).get("/health").expect(200, { message: "OK" }))
   })
 })
