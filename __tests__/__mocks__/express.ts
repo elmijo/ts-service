@@ -10,6 +10,7 @@ import {
   // IRouterMatcher,
   ErrorRequestHandler,
 } from "express-serve-static-core"
+import { RequestHandlerConstructor } from "serve-static"
 
 import { Server } from "http"
 
@@ -30,6 +31,8 @@ export const middle = jest.fn<RequestHandler, []>()
 export const errors = jest.fn<ErrorRequestHandler, []>()
 export const endpoint = jest.fn<IRouter, []>()
 export const application = jest.fn<Application, []>()
+// @ts-ignore
+export const static = jest.fn<RequestHandlerConstructor<Response>, []>()
 
 //@ts-ignore
 response.json = jest.fn<Send, []>(() => response)
@@ -40,6 +43,8 @@ response.status = jest.fn(() => response)
 const express = jest.fn(() => ({
   use: RouterMock.use,
   Router,
+  // @ts-ignore
+  static,
   application,
   disable: jest.fn(() => express),
   listen: jest.fn<Partial<Server>, []>(() => ({
