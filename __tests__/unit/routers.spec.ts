@@ -10,6 +10,6 @@ const routerMock = Router as jest.MockedFunction<typeof Router>
 
 it("sould register all routers", () => {
   const router = routerMock.mock.results[0].value
-  expect(router.use).toHaveBeenCalledWith(["/", "/health"], health)
+  expect(router.get).toHaveBeenCalledWith(["/", "/health"], health)
   expect(router.use).toHaveBeenCalledWith("/api-docs", "serve", "setup")
 })
