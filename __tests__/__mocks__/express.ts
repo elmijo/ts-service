@@ -16,11 +16,13 @@ import { Server } from "http"
 
 interface IRouterMock {
   use: typeof jest.fn
+  get: typeof jest.fn
 }
 
 // @ts-ignore
 const RouterMock = {
   use: jest.fn<IRouterHandler<IRouterMock>, []>(() => RouterMock),
+  get: jest.fn<IRouterHandler<IRouterMock>, []>(() => RouterMock),
 }
 
 export const Router = jest.fn<IRouter, []>(() => RouterMock)

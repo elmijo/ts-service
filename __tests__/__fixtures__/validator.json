@@ -1,0 +1,46 @@
+{
+  "schema": {
+    "type": "object",
+    "additionalProperties": true,
+    "required": ["id", "name", "number"],
+    "properties": {
+      "id": { "type": "string" },
+      "name": { "type": "string" },
+      "number": { "type": "integer" }
+    }
+  },
+  "errors": [
+    {
+      "instancePath": "/id",
+      "keyword": "required",
+      "message": "must have required property 'id'",
+      "params": {
+        "missingProperty": "id"
+      },
+      "schemaPath": "#/required"
+    },
+    {
+      "instancePath": "/name",
+      "keyword": "required",
+      "message": "must have required property 'name'",
+      "params": {
+        "missingProperty": "name"
+      },
+      "schemaPath": "#/required"
+    },
+    {
+      "instancePath": "/number",
+      "keyword": "required",
+      "message": "must have required property 'number'",
+      "params": {
+        "missingProperty": "number"
+      },
+      "schemaPath": "#/required"
+    }
+  ],
+  "listErrors": [
+    "id: must have required property 'id'",
+    "name: must have required property 'name'",
+    "number: must have required property 'number'"
+  ]
+}
