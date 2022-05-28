@@ -12,7 +12,9 @@ jobs:
   include:
     - stage: Code Quality
       if: branch = main OR type = pull_request
-      script: yarn lint
+      script:
+        - yarn lint
+        - yarn audit --prod --level=critical
     - stage: Unit Tests
       if: branch = main OR type = pull_request
       before_install: yarn global add codecov
